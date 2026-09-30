@@ -8,6 +8,7 @@ same folder with a `-voice` suffix (see `~/.local/bin/voice-note-stamp`).
 
     notes        browse: list on the left, preview on the right
     notes new    jump straight into a new note; saving or cancelling exits
+    notes open <note>   browse with that note selected (path or file name)
 
 Keys in the browser: `n` new, `enter` edit in place, `o` open in `$EDITOR`,
 `d` delete, `/` search, `tab` focus the preview to scroll it, `r` reload,

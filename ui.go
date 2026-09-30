@@ -60,6 +60,8 @@ type model struct {
 	discardArmed  bool
 	pendingDelete *Note
 
+	openPath string // started with `notes open <note>`: select it once the list loads
+
 	editPath string // note being edited in the textarea; empty when composing a new one
 	editOrig string // its text when editing started, to detect unsaved changes
 }
@@ -99,7 +101,7 @@ func (m model) Init() tea.Cmd {
 	if m.popup {
 		return textarea.Blink
 	}
-	return loadCmd(m.dir, "")
+	return loadCmd(m.dir, m.openPath)
 }
 
 func loadCmd(dir, selectPath string) tea.Cmd {
