@@ -1,10 +1,10 @@
 # Maintainer: Antonio Piattelli <hello@antoniopiattelli.com>
-pkgname=notes
+pkgname=jotter
 pkgver=0.1.0
 pkgrel=1
 pkgdesc='Tiny terminal notes app: plain markdown files, folders, live preview'
 arch=('x86_64' 'aarch64')
-url='https://github.com/antoniowav/notes'
+url='https://github.com/antoniowav/jotter'
 license=('MIT')
 depends=('glibc')
 makedepends=('go')

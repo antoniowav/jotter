@@ -1,4 +1,4 @@
-# notes
+# jotter
 
 **A tiny terminal notes app: plain markdown files, folders, a live preview and nothing to lock you in.**
 
@@ -10,7 +10,7 @@
 > 📸 _Screenshots coming soon: browser · writing · folders._
 
 Every note is a `.md` file in one folder, so they work with any editor, sync tool,
-`grep` or git. `notes` gives you a fast way to browse, search, read and write them.
+`grep` or git. `jotter` gives you a fast way to browse, search, read and write them.
 
 ## Features
 
@@ -19,7 +19,7 @@ Every note is a `.md` file in one folder, so they work with any editor, sync too
 - **Search** across titles and full text.
 - **Folders**: subfolders of your notes directory show up in a folder picker.
 - **Live**: notes added or changed by other programs appear within a second.
-- **Quick capture**: `notes new` opens straight into a blank note and exits on save. Bind it to a hotkey.
+- **Quick capture**: `jotter new` opens straight into a blank note and exits on save. Bind it to a hotkey.
 - **Native colours**: it uses your terminal's ANSI palette, so it matches any theme (including Omarchy's).
 
 ## Install
@@ -27,7 +27,7 @@ Every note is a `.md` file in one folder, so they work with any editor, sync too
 ### Arch Linux (AUR)
 
 ```sh
-yay -S notes          # or: paru -S notes
+yay -S jotter         # or: paru -S jotter
 ```
 
 ### From a git clone (any Linux)
@@ -35,8 +35,8 @@ yay -S notes          # or: paru -S notes
 Needs Go ≥ 1.24.
 
 ```sh
-git clone https://github.com/antoniowav/notes.git
-cd notes
+git clone https://github.com/antoniowav/jotter.git
+cd jotter
 ./install             # builds and installs into ~/.local
 ```
 
@@ -46,10 +46,10 @@ Use `PREFIX=/some/where ./install` to install elsewhere. Update with `git pull &
 ## Usage
 
 ```sh
-notes                   # browse
-notes new               # write a new note; saving or cancelling exits
-notes open <note>       # browse with that note selected (a path, or just its file name)
-notes --version
+jotter                  # browse
+jotter new              # write a new note; saving or cancelling exits
+jotter open <note>      # browse with that note selected (a path, or just its file name)
+jotter --version
 ```
 
 The first line of a note is its title (leading `#` marks are dropped).
@@ -113,38 +113,38 @@ The first line of a note is its title (leading `#` marks are dropped).
 
 ## Where your notes are stored
 
-- In **`$NOTES_DIR`**, or **`~/Notes`** when it isn't set. The folder is created on first run.
+- In **`$JOTTER_DIR`** (or `$NOTES_DIR`), or **`~/Notes`** when neither is set. The folder is created on first run.
 - One file per note, named by when it was written: `YYYY-MM-DD-HHMMSS.md` (e.g. `2026-10-02-194421.md`).
   Notes are sorted by that time; files with other names use their modification time.
 - Any `*.md` file you put there yourself shows up too. Hidden files and non-`.md` files are ignored.
 - **Folders** are the direct subfolders of the notes directory (one level; deeper folders aren't shown).
-  `notes new` always writes to the top level.
+  `jotter new` always writes to the top level.
 - A file name ending in `-voice.md` is labelled as a voice note. Handy if a dictation script drops notes in the same folder.
 - **Deleting a note removes the file permanently.** There is no trash.
 
-`notes` keeps no other state, config or cache.
+`jotter` keeps no other state, config or cache.
 
 ## Desktop integration
 
-Installing adds a *Notes* entry to your app launcher (it opens in your terminal).
+Installing adds a *Jotter* entry to your app launcher (it opens in your terminal).
 
 On **Omarchy** you can bind it to keys, with a small floating window for quick capture:
 
 ```lua
 -- ~/.config/hypr/bindings.lua
-o.bind("SUPER + N", "Notes", "omarchy-launch-tui --app-id=org.omarchy.notes notes")
-o.bind("SUPER + ALT + N", "New note", "omarchy-launch-tui --app-id=notes-popup notes new")
+o.bind("SUPER + N", "Notes", "omarchy-launch-tui --app-id=org.omarchy.jotter jotter")
+o.bind("SUPER + ALT + N", "New note", "omarchy-launch-tui --app-id=jotter-popup jotter new")
 
 -- ~/.config/hypr/hyprland.lua
-o.window("notes-popup", { float = true, center = true, size = { 800, 500 } })
+o.window("jotter-popup", { float = true, center = true, size = { 800, 500 } })
 ```
 
-Elsewhere, start `notes new` in a terminal with a class / app-id your window manager can float,
-e.g. `foot --app-id=notes-popup notes new` or `alacritty --class notes-popup -e notes new`.
+Elsewhere, start `jotter new` in a terminal with a class / app-id your window manager can float,
+e.g. `foot --app-id=jotter-popup jotter new` or `alacritty --class jotter-popup -e jotter new`.
 
 ## Uninstall
 
-- AUR / pacman: `sudo pacman -R notes`
+- AUR / pacman: `sudo pacman -R jotter`
 - Git-clone install: `./uninstall` from the checkout
 
 Your notes are never touched.

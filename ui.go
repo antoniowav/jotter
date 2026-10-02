@@ -81,7 +81,7 @@ type clearStatusMsg struct{ id int }
 type model struct {
 	root  string // the notes directory; its subdirectories are folders
 	dir   string // folder currently browsed: root or one of its subdirectories
-	popup bool   // started with `notes new`: exit once the note is saved or cancelled
+	popup bool   // started with `jotter new`: exit once the note is saved or cancelled
 	mode  mode
 
 	folders list.Model // folder picker, shown at launch when root has subfolders
@@ -103,7 +103,7 @@ type model struct {
 	discardArmed  bool
 	pendingDelete *Note
 
-	openPath string // started with `notes open <note>`: select it once the list loads
+	openPath string // started with `jotter open <note>`: select it once the list loads
 
 	editPath string // note being edited in the textarea; empty when composing a new one
 	editOrig string // its text when editing started, to detect unsaved changes

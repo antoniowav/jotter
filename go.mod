@@ -1,4 +1,4 @@
-module notes
+module github.com/antoniowav/jotter
 
 go 1.24.2
 

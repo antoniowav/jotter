@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Build notes from this checkout and install it into ~/.local (or $PREFIX).
+# Build jotter from this checkout and install it into ~/.local (or $PREFIX).
 #   ./install                  PREFIX=~/.local
-#   PREFIX=/opt/notes ./install
+#   PREFIX=/opt/jotter ./install
 set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
-name=notes
+name=jotter
 PREFIX=${PREFIX:-$HOME/.local}
 
 command -v go >/dev/null || { echo "install: Go is needed to build $name (Arch: sudo pacman -S go)" >&2; exit 1; }

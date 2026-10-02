@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=Notes
-GenericName=Notes
+Name=Jotter
+GenericName=Jotter
 Comment=Plain markdown notes in the terminal
-Exec=notes
-Icon=notes
+Exec=jotter
+Icon=jotter
 Terminal=true
 Categories=Utility;TextEditor;ConsoleOnly;
-Keywords=notes;markdown;memo;jot;
+Keywords=notes;markdown;memo;jot;jotter;

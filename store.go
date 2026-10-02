@@ -22,9 +22,13 @@ type Note struct {
 	Voice bool // dictated via voice-note (file name ends in -voice)
 }
 
-// notesDir returns the notes directory, creating it if needed.
+// notesDir returns the notes directory, creating it if needed: $JOTTER_DIR,
+// else $NOTES_DIR, else ~/Notes.
 func notesDir() (string, error) {
-	dir := os.Getenv("NOTES_DIR")
+	dir := os.Getenv("JOTTER_DIR")
+	if dir == "" {
+		dir = os.Getenv("NOTES_DIR")
+	}
 	if dir == "" {
 		home, err := os.UserHomeDir()
 		if err != nil {
@@ -116,7 +120,7 @@ func newNotePath(dir string) string {
 	}
 }
 
-// findNote resolves the argument of `notes open` to a note path: an existing
+// findNote resolves the argument of `jotter open` to a note path: an existing
 // file in root or one of its folders as given, otherwise the first note with
 // that file name, looking in root first and then in each folder. A name that
 // matches nothing resolves to root, where the browser starts as usual.

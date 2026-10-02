@@ -1,10 +1,10 @@
-// notes is a small TUI for plain-markdown notes stored one-per-file in ~/Notes.
+// jotter is a small TUI for plain-markdown notes stored one-per-file in ~/Notes.
 //
-//	notes              open the browser (list + preview)
-//	notes new          open straight into a new note; saving or cancelling exits
-//	notes open <note>  open the browser with that note selected
+//	jotter              open the browser (list + preview)
+//	jotter new          open straight into a new note; saving or cancelling exits
+//	jotter open <note>  open the browser with that note selected
 //
-// Set NOTES_DIR to use a different directory.
+// Set JOTTER_DIR (or NOTES_DIR) to use a different directory.
 package main
 
 import (
@@ -18,13 +18,13 @@ import (
 // version is set at build time with -ldflags "-X main.version=...".
 var version = "dev"
 
-const usage = `usage: notes [new | open <note>]
+const usage = `usage: jotter [new | open <note>]
 
-  notes              browse notes: list on the left, preview on the right
-  notes new          write a new note; saving or cancelling exits
-  notes open <note>  browse with <note> selected (a path or a file name)
+  jotter              browse notes: list on the left, preview on the right
+  jotter new          write a new note; saving or cancelling exits
+  jotter open <note>  browse with <note> selected (a path or a file name)
 
-Notes are markdown files in $NOTES_DIR (default ~/Notes).`
+Notes are markdown files in $JOTTER_DIR (default ~/Notes).`
 
 func main() {
 	popup := false
@@ -35,7 +35,7 @@ func main() {
 		fmt.Println(usage)
 		return
 	case len(os.Args) == 2 && (os.Args[1] == "-v" || os.Args[1] == "--version" || os.Args[1] == "version"):
-		fmt.Println("notes", version)
+		fmt.Println("jotter", version)
 		return
 	case len(os.Args) == 2 && os.Args[1] == "new":
 		popup = true
@@ -48,7 +48,7 @@ func main() {
 
 	dir, err := notesDir()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "notes:", err)
+		fmt.Fprintln(os.Stderr, "jotter:", err)
 		os.Exit(1)
 	}
 
@@ -65,7 +65,7 @@ func main() {
 
 	p := tea.NewProgram(m, tea.WithAltScreen(), tea.WithReportFocus())
 	if _, err := p.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, "notes:", err)
+		fmt.Fprintln(os.Stderr, "jotter:", err)
 		os.Exit(1)
 	}
 }
