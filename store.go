@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -113,4 +114,85 @@ func newNotePath(dir string) string {
 			return path
 		}
 	}
+}
+
+// Folder is a directory of notes: the notes directory itself or one of its
+// direct subdirectories.
+type Folder struct {
+	Path  string
+	Name  string
+	Count int
+	Time  time.Time // newest note in it, zero when empty
+}
+
+// loadFolders lists root followed by its subdirectories, alphabetically.
+// Only one level is shown; deeper directories are left alone.
+func loadFolders(root string) ([]Folder, error) {
+	entries, err := os.ReadDir(root)
+	if err != nil {
+		return nil, err
+	}
+	folders := []Folder{folderOf(root, "Notes")}
+	for _, e := range entries {
+		if e.IsDir() && !strings.HasPrefix(e.Name(), ".") {
+			folders = append(folders, folderOf(filepath.Join(root, e.Name()), e.Name()))
+		}
+	}
+	sort.SliceStable(folders[1:], func(i, j int) bool {
+		return strings.ToLower(folders[1+i].Name) < strings.ToLower(folders[1+j].Name)
+	})
+	return folders, nil
+}
+
+func folderOf(path, name string) Folder {
+	f := Folder{Path: path, Name: name}
+	if notes, err := loadNotes(path); err == nil {
+		f.Count = len(notes)
+		if len(notes) > 0 {
+			f.Time = notes[0].Time
+		}
+	}
+	return f
+}
+
+// hasSubfolders reports whether root contains any non-hidden directory.
+func hasSubfolders(root string) bool {
+	entries, _ := os.ReadDir(root)
+	for _, e := range entries {
+		if e.IsDir() && !strings.HasPrefix(e.Name(), ".") {
+			return true
+		}
+	}
+	return false
+}
+
+// dirStamp summarises the notes in dir (names, sizes, mtimes) so a change made
+// by another program can be spotted without reloading every file.
+func dirStamp(dir string) string {
+	entries, _ := os.ReadDir(dir)
+	var b strings.Builder
+	for _, e := range entries {
+		name := e.Name()
+		if e.IsDir() || strings.HasPrefix(name, ".") || !strings.HasSuffix(name, ".md") {
+			continue
+		}
+		if info, err := e.Info(); err == nil {
+			fmt.Fprintf(&b, "%s %d %d\n", name, info.Size(), info.ModTime().UnixNano())
+		}
+	}
+	return b.String()
+}
+
+// foldersStamp is dirStamp over root and every folder in it, plus the folder
+// names, so the picker notices new folders as well as new notes.
+func foldersStamp(root string) string {
+	var b strings.Builder
+	b.WriteString(dirStamp(root))
+	entries, _ := os.ReadDir(root)
+	for _, e := range entries {
+		if e.IsDir() && !strings.HasPrefix(e.Name(), ".") {
+			b.WriteString("/" + e.Name() + "\n" + dirStamp(filepath.Join(root, e.Name())))
+		}
+	}
+	return b.String()
 }
