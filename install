@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Build notes from this checkout and install it into ~/.local (or $PREFIX).
+#   ./install                  PREFIX=~/.local
+#   PREFIX=/opt/notes ./install
+set -euo pipefail
+cd "$(dirname "$(readlink -f "$0")")"
+
+name=notes
+PREFIX=${PREFIX:-$HOME/.local}
+
+command -v go >/dev/null || { echo "install: Go is needed to build $name (Arch: sudo pacman -S go)" >&2; exit 1; }
+
+version=$(git describe --tags --always --dirty 2>/dev/null | sed 's/^v//') || true
+[[ -n $version ]] || version=$(cat VERSION)
+
+echo "Building $name $version…"
+mkdir -p "$PREFIX/bin"
+go build -trimpath -ldflags "-s -w -X main.version=$version" -o "$PREFIX/bin/$name.new" .
+mv -f "$PREFIX/bin/$name.new" "$PREFIX/bin/$name"
+
+install -Dm644 assets/$name.desktop "$PREFIX/share/applications/$name.desktop"
+install -Dm644 assets/$name.svg "$PREFIX/share/icons/hicolor/scalable/apps/$name.svg"
+command -v update-desktop-database >/dev/null && update-desktop-database -q "$PREFIX/share/applications" || true
+command -v gtk-update-icon-cache >/dev/null && gtk-update-icon-cache -qtf "$PREFIX/share/icons/hicolor" 2>/dev/null || true
+
+echo "Installed $PREFIX/bin/$name"
+case ":$PATH:" in *":$PREFIX/bin:"*) ;; *) echo "Note: $PREFIX/bin is not on your PATH." ;; esac

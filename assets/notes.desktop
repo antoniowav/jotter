@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Notes
+GenericName=Notes
+Comment=Plain markdown notes in the terminal
+Exec=notes
+Icon=notes
+Terminal=true
+Categories=Utility;TextEditor;ConsoleOnly;
+Keywords=notes;markdown;memo;jot;
