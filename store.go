@@ -116,6 +116,38 @@ func newNotePath(dir string) string {
 	}
 }
 
+// findNote resolves the argument of `notes open` to a note path: an existing
+// file in root or one of its folders as given, otherwise the first note with
+// that file name, looking in root first and then in each folder. A name that
+// matches nothing resolves to root, where the browser starts as usual.
+func findNote(root, arg string) string {
+	if abs, err := filepath.Abs(arg); err == nil {
+		if rel, err := filepath.Rel(root, abs); err == nil && !strings.HasPrefix(rel, "..") &&
+			strings.Count(rel, string(filepath.Separator)) <= 1 {
+			if info, err := os.Stat(abs); err == nil && !info.IsDir() {
+				return abs
+			}
+		}
+	}
+	base := filepath.Base(arg)
+	if !strings.HasSuffix(base, ".md") {
+		base += ".md"
+	}
+	dirs := []string{root}
+	entries, _ := os.ReadDir(root)
+	for _, e := range entries {
+		if e.IsDir() && !strings.HasPrefix(e.Name(), ".") {
+			dirs = append(dirs, filepath.Join(root, e.Name()))
+		}
+	}
+	for _, d := range dirs {
+		if _, err := os.Stat(filepath.Join(d, base)); err == nil {
+			return filepath.Join(d, base)
+		}
+	}
+	return filepath.Join(root, base)
+}
+
 // Folder is a directory of notes: the notes directory itself or one of its
 // direct subdirectories.
 type Folder struct {

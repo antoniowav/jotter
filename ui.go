@@ -562,11 +562,23 @@ func (m model) updateCompose(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-// openEditor runs $EDITOR (default nvim) on path, suspending the TUI meanwhile.
+// openEditor runs $VISUAL or $EDITOR on path, suspending the TUI meanwhile.
+// With neither set it falls back to the first of nvim, vim, nano, vi found.
 func openEditor(path string) tea.Cmd {
-	editor := os.Getenv("EDITOR")
-	if strings.TrimSpace(editor) == "" {
-		editor = "nvim"
+	editor := strings.TrimSpace(os.Getenv("VISUAL"))
+	if editor == "" {
+		editor = strings.TrimSpace(os.Getenv("EDITOR"))
+	}
+	if editor == "" {
+		for _, e := range []string{"nvim", "vim", "nano", "vi"} {
+			if _, err := exec.LookPath(e); err == nil {
+				editor = e
+				break
+			}
+		}
+	}
+	if editor == "" {
+		return func() tea.Msg { return editorDoneMsg{errors.New("no editor found; set $EDITOR")} }
 	}
 	c := exec.Command("sh", "-c", editor+` "$1"`, "sh", path)
 	return tea.ExecProcess(c, func(err error) tea.Msg { return editorDoneMsg{err} })
@@ -714,7 +726,7 @@ func (m model) footer() string {
 }
 
 func (m model) listHelp() string {
-	h := "n new · enter edit · o open in $EDITOR · d delete · / search · tab preview"
+	h := "n new · enter edit · o open in editor · d delete · / search · tab preview"
 	if hasSubfolders(m.root) {
 		h += " · f folders"
 	}
