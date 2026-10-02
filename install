@@ -10,7 +10,7 @@ PREFIX=${PREFIX:-$HOME/.local}
 
 command -v go >/dev/null || { echo "install: Go is needed to build $name (Arch: sudo pacman -S go)" >&2; exit 1; }
 
-version=$(git describe --tags --always --dirty 2>/dev/null | sed 's/^v//') || true
+version=$(git describe --tags --dirty 2>/dev/null | sed "s/^v//") || true
 [[ -n $version ]] || version=$(cat VERSION)
 
 echo "Building $name $version…"
