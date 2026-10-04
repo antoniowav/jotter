@@ -107,6 +107,7 @@ type model struct {
 
 	editPath string // note being edited in the textarea; empty when composing a new one
 	editOrig string // its text when editing started, to detect unsaved changes
+	editName string // its title, for the window title
 
 	// selectAll is ctrl+a in the editor: the whole note is highlighted, and the
 	// next key copies, cuts, deletes or replaces it. The textarea has no
@@ -157,7 +158,26 @@ func newModel(dir string, popup bool) model {
 // Name the window, so bars and window switchers show "Jotter" rather than the
 // terminal's name. Set once here, it covers every way jotter starts.
 func (m model) Init() tea.Cmd {
-	return tea.Batch(tea.SetWindowTitle("Jotter"), m.start())
+	return tea.Batch(m.windowTitle(), m.start())
+}
+
+// windowTitle is "Jotter", plus what is being written while writing. Browsing
+// shows no note names, so they aren't on display in bars, window switchers and
+// screen shares all the time.
+func (m model) windowTitle() tea.Cmd {
+	title := "Jotter"
+	switch {
+	case m.mode != modeCompose:
+	case m.editPath == "":
+		title += " — New note"
+	default:
+		name := []rune(sanitize(m.editName))
+		if len(name) > 40 {
+			name = append(name[:39], '…')
+		}
+		title += " — Editing: " + string(name)
+	}
+	return tea.SetWindowTitle(title)
 }
 
 // start is what each way of launching begins with: writing (`jotter new`),
@@ -309,7 +329,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.err != nil {
 			cmd = m.setStatus("editor: "+msg.err.Error(), true)
 		}
-		return m, tea.Batch(cmd, loadCmd(m.dir, m.selectedPath()))
+		// The editor may have retitled the window (nvim's 'title'); name it again.
+		return m, tea.Batch(cmd, m.windowTitle(), loadCmd(m.dir, m.selectedPath()))
 
 	case clearStatusMsg:
 		if msg.id == m.statusID {
@@ -442,15 +463,15 @@ func (m model) startCompose(n *Note) (tea.Model, tea.Cmd) {
 	m.mode = modeCompose
 	m.discardArmed = false
 	m.status = ""
-	m.editPath, m.editOrig = "", ""
+	m.editPath, m.editOrig, m.editName = "", "", ""
 	m.setSelectAll(false)
 	m.ta.Reset()
 	if n != nil {
-		m.editPath = n.Path
+		m.editPath, m.editName = n.Path, n.Title
 		m.editOrig = strings.TrimRight(sanitize(n.Body), "\n") // saving drops any control characters
 		m.ta.SetValue(m.editOrig)
 	}
-	return m, m.ta.Focus()
+	return m, tea.Batch(m.ta.Focus(), m.windowTitle())
 }
 
 // saveCompose writes the textarea to the edited note, or to a new file.
@@ -540,7 +561,7 @@ func (m model) updateCompose(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.mode = modeList
 		m.ta.Blur()
 		m.previewPath = ""
-		return m, tea.Batch(m.setStatus("Saved", false), loadCmd(m.dir, path))
+		return m, tea.Batch(m.setStatus("Saved", false), m.windowTitle(), loadCmd(m.dir, path))
 
 	case "esc":
 		text := strings.TrimRight(m.ta.Value(), " \t\n")
@@ -558,7 +579,7 @@ func (m model) updateCompose(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.ta.Blur()
 		m.status = ""
 		m.discardArmed = false
-		return m, nil
+		return m, m.windowTitle()
 	}
 
 	if m.discardArmed {

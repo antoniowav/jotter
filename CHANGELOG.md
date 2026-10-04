@@ -7,6 +7,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 - The window title is "Jotter", so bars and window switchers show it instead of the terminal's name.
+- While writing, the title also says what: "Jotter — New note" or "Jotter — Editing: <title>". Browsing shows no note names.
 
 ### Fixed
 - `jotter --version` printed `dev` when installed with `go install`.
