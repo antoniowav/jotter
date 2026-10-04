@@ -6,7 +6,7 @@ pkgdesc='Tiny terminal notes app: plain markdown files, folders, live preview'
 arch=('x86_64' 'aarch64')
 url='https://github.com/antoniowav/jotter'
 license=('MIT')
-depends=('glibc')
+depends=('glibc' 'hicolor-icon-theme')
 makedepends=('go')
 optdepends=('wl-clipboard: copy and cut on Wayland'
             'xclip: copy and cut on X11')

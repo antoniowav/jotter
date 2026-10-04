@@ -8,6 +8,6 @@ PREFIX=${PREFIX:-$HOME/.local}
 rm -fv "$PREFIX/bin/$name" \
        "$PREFIX/share/applications/$name.desktop" \
        "$PREFIX/share/icons/hicolor/scalable/apps/$name.svg"
-command -v update-desktop-database >/dev/null && update-desktop-database -q "$PREFIX/share/applications" || true
+if command -v update-desktop-database >/dev/null; then update-desktop-database -q "$PREFIX/share/applications" || true; fi
 
 echo "Uninstalled. Your notes in ${JOTTER_DIR:-${NOTES_DIR:-$HOME/Notes}} were left alone."
