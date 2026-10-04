@@ -5,6 +5,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+- The window title is "Jotter", so bars and window switchers show it instead of the terminal's name.
+
 ### Fixed
 - `jotter --version` printed `dev` when installed with `go install`.
 

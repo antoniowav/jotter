@@ -154,16 +154,22 @@ func newModel(dir string, popup bool) model {
 	return m
 }
 
+// Name the window, so bars and window switchers show "Jotter" rather than the
+// terminal's name. Set once here, it covers every way jotter starts.
 func (m model) Init() tea.Cmd {
-	// Name the window, so bars and window switchers show "Jotter" rather than the terminal's name.
-	title := tea.SetWindowTitle("Jotter")
+	return tea.Batch(tea.SetWindowTitle("Jotter"), m.start())
+}
+
+// start is what each way of launching begins with: writing (`jotter new`),
+// the folder picker, or the note list.
+func (m model) start() tea.Cmd {
 	switch {
 	case m.popup:
-		return tea.Batch(title, textarea.Blink)
+		return textarea.Blink
 	case m.openPath == "" && hasSubfolders(m.root):
-		return tea.Batch(title, m.showFolders(), pollCmd())
+		return tea.Batch(m.showFolders(), pollCmd())
 	}
-	return tea.Batch(title, loadCmd(m.dir, m.openPath), pollCmd())
+	return tea.Batch(loadCmd(m.dir, m.openPath), pollCmd())
 }
 
 // showFolders loads the folder list; the picker opens when it arrives.
