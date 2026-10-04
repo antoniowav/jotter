@@ -5,6 +5,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-04
+
 ### Added
 - The window title is "Jotter", so bars and window switchers show it instead of the terminal's name.
 - While writing, the title also says what: "Jotter — New note" or "Jotter — Editing: <title>". Browsing shows no note names.
@@ -42,5 +44,6 @@ First public release.
 - `golang.org/x/sys` updated to v0.44.0 (GO-2026-5024; not reachable from jotter's code). Go ≥ 1.25 is now needed to build.
 - CI: tests, govulncheck, staticcheck, gosec, shellcheck, gitleaks, namcap, and CodeQL once public.
 
-[Unreleased]: https://github.com/antoniowav/jotter/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/antoniowav/jotter/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/antoniowav/jotter/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/antoniowav/jotter/releases/tag/v0.1.0
