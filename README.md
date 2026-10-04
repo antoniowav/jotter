@@ -27,15 +27,7 @@ Every note is a `.md` file in one folder, so they work with any editor, sync too
 
 ## Install
 
-### Arch Linux (AUR)
-
-```sh
-yay -S jotter         # or: paru -S jotter
-```
-
-### From a git clone (any Linux)
-
-Needs Go ≥ 1.25.
+Works on any Linux. Needs Go ≥ 1.25 to build.
 
 ```sh
 git clone https://github.com/antoniowav/jotter.git
@@ -110,7 +102,7 @@ The first line of a note is its title (leading `#` marks are dropped).
 ## Requirements
 
 - Linux (or any Unix) and a terminal.
-- Go ≥ 1.25 to build it (not needed with the AUR package at runtime).
+- Go ≥ 1.25 to build it.
 - _Optional_: `wl-clipboard` (Wayland) or `xclip`/`xsel` (X11) for copy and cut.
 - _Optional_: an editor in `$VISUAL` / `$EDITOR` for <kbd>o</kbd>.
 
@@ -149,10 +141,7 @@ e.g. `foot --app-id=jotter-popup jotter new` or `alacritty --class jotter-popup 
 
 ## Uninstall
 
-- AUR / pacman: `sudo pacman -R jotter`
-- Git-clone install: `./uninstall` from the checkout
-
-Your notes are never touched.
+Run `./uninstall` from the checkout. Your notes are never touched.
 
 ## License
 
