@@ -5,6 +5,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Fixed
+- `jotter --version` printed `dev` when installed with `go install`.
+
 ## [0.1.0] - 2026-10-04
 
 First public release.

@@ -11,7 +11,7 @@ makedepends=('go')
 optdepends=('wl-clipboard: copy and cut on Wayland'
             'xclip: copy and cut on X11')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP')  # run updpkgsums once the v$pkgver tag is on GitHub
+sha256sums=('1eee7790d12511c43f8e635ffa92424972c31454ac7e677eff162c50c20906f8')
 
 prepare() {
   cd "$pkgname-$pkgver"

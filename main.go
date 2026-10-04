@@ -11,12 +11,24 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime/debug"
+	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 // version is set at build time with -ldflags "-X main.version=...".
 var version = "dev"
+
+// currentVersion is version, or for `go install …@vX.Y.Z` (no ldflags) the
+// module version Go recorded in the binary.
+func currentVersion() string {
+	if info, ok := debug.ReadBuildInfo(); ok && version == "dev" &&
+		info.Main.Version != "" && info.Main.Version != "(devel)" {
+		return strings.TrimPrefix(info.Main.Version, "v")
+	}
+	return version
+}
 
 const usage = `usage: jotter [new | open <note>]
 
@@ -35,7 +47,7 @@ func main() {
 		fmt.Println(usage)
 		return
 	case len(os.Args) == 2 && (os.Args[1] == "-v" || os.Args[1] == "--version" || os.Args[1] == "version"):
-		fmt.Println("jotter", version)
+		fmt.Println("jotter", currentVersion())
 		return
 	case len(os.Args) == 2 && os.Args[1] == "new":
 		popup = true

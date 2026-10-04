@@ -155,13 +155,15 @@ func newModel(dir string, popup bool) model {
 }
 
 func (m model) Init() tea.Cmd {
+	// Name the window, so bars and window switchers show "Jotter" rather than the terminal's name.
+	title := tea.SetWindowTitle("Jotter")
 	switch {
 	case m.popup:
-		return textarea.Blink
+		return tea.Batch(title, textarea.Blink)
 	case m.openPath == "" && hasSubfolders(m.root):
-		return tea.Batch(m.showFolders(), pollCmd())
+		return tea.Batch(title, m.showFolders(), pollCmd())
 	}
-	return tea.Batch(loadCmd(m.dir, m.openPath), pollCmd())
+	return tea.Batch(title, loadCmd(m.dir, m.openPath), pollCmd())
 }
 
 // showFolders loads the folder list; the picker opens when it arrives.
