@@ -58,7 +58,7 @@ func main() {
 		// The browser starts in the note's folder (the top level or one below it).
 		if folder := filepath.Dir(path); folder != dir {
 			m.dir = folder
-			m.list.Title = "Notes / " + filepath.Base(folder)
+			m.list.Title = "Notes / " + sanitize(filepath.Base(folder))
 		}
 		m.openPath = path
 	}

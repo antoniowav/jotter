@@ -1,5 +1,8 @@
 # jotter
 
+[![CI](https://github.com/antoniowav/jotter/actions/workflows/ci.yml/badge.svg)](https://github.com/antoniowav/jotter/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/antoniowav/jotter/actions/workflows/codeql.yml/badge.svg)](https://github.com/antoniowav/jotter/actions/workflows/codeql.yml)
+
 **A tiny terminal notes app: plain markdown files, folders, a live preview and nothing to lock you in.**
 
 <!-- Screenshots: add the images to docs/screenshots/ and uncomment.
@@ -32,7 +35,7 @@ yay -S jotter         # or: paru -S jotter
 
 ### From a git clone (any Linux)
 
-Needs Go ≥ 1.24.
+Needs Go ≥ 1.25.
 
 ```sh
 git clone https://github.com/antoniowav/jotter.git
@@ -107,7 +110,7 @@ The first line of a note is its title (leading `#` marks are dropped).
 ## Requirements
 
 - Linux (or any Unix) and a terminal.
-- Go ≥ 1.24 to build it (not needed with the AUR package at runtime).
+- Go ≥ 1.25 to build it (not needed with the AUR package at runtime).
 - _Optional_: `wl-clipboard` (Wayland) or `xclip`/`xsel` (X11) for copy and cut.
 - _Optional_: an editor in `$VISUAL` / `$EDITOR` for <kbd>o</kbd>.
 
@@ -121,6 +124,8 @@ The first line of a note is its title (leading `#` marks are dropped).
   `jotter new` always writes to the top level.
 - A file name ending in `-voice.md` is labelled as a voice note. Handy if a dictation script drops notes in the same folder.
 - **Deleting a note removes the file permanently.** There is no trash.
+- New notes are readable only by you (mode `600`), and a notes folder that jotter creates is `700`.
+  For a folder you made earlier, run `chmod 700 ~/Notes && chmod 600 ~/Notes/*.md` to do the same.
 
 `jotter` keeps no other state, config or cache.
 

@@ -184,7 +184,7 @@ func (m model) openFolder(dir string) (tea.Model, tea.Cmd) {
 	m.list.SetItems(nil)
 	m.list.Title = "Notes"
 	if dir != m.root {
-		m.list.Title = "Notes / " + filepath.Base(dir)
+		m.list.Title = "Notes / " + sanitize(filepath.Base(dir))
 	}
 	return m, loadCmd(dir, "")
 }
@@ -439,7 +439,7 @@ func (m model) startCompose(n *Note) (tea.Model, tea.Cmd) {
 	m.ta.Reset()
 	if n != nil {
 		m.editPath = n.Path
-		m.editOrig = strings.TrimRight(n.Body, "\n")
+		m.editOrig = strings.TrimRight(sanitize(n.Body), "\n") // saving drops any control characters
 		m.ta.SetValue(m.editOrig)
 	}
 	return m, m.ta.Focus()
@@ -454,7 +454,7 @@ func (m model) saveCompose() (string, error) {
 	if strings.TrimSpace(text) == "" {
 		return "", errors.New("empty note (use d to delete it instead)")
 	}
-	return m.editPath, os.WriteFile(m.editPath, []byte(text+"\n"), 0o644)
+	return m.editPath, os.WriteFile(m.editPath, []byte(text+"\n"), 0o600) // keeps an existing file's mode
 }
 
 // setSelectAll highlights the whole textarea, or puts its normal style back.
@@ -580,7 +580,9 @@ func openEditor(path string) tea.Cmd {
 	if editor == "" {
 		return func() tea.Msg { return editorDoneMsg{errors.New("no editor found; set $EDITOR")} }
 	}
-	c := exec.Command("sh", "-c", editor+` "$1"`, "sh", path)
+	// $EDITOR may carry arguments ("code -w"), so it goes through sh; the note's
+	// path is passed as "$1", never spliced into the command line.
+	c := exec.Command("sh", "-c", editor+` "$1"`, "sh", path) // #nosec G204 G702 -- the user's own $EDITOR
 	return tea.ExecProcess(c, func(err error) tea.Msg { return editorDoneMsg{err} })
 }
 

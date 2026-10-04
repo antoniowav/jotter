@@ -42,7 +42,7 @@ func renderMarkdown(body string, width int) string {
 	}
 	var out []string
 	inCode := false
-	for _, raw := range strings.Split(strings.TrimRight(body, "\n"), "\n") {
+	for _, raw := range strings.Split(strings.TrimRight(sanitize(body), "\n"), "\n") {
 		line := strings.TrimRight(raw, " \t")
 		if strings.HasPrefix(strings.TrimSpace(line), "```") {
 			inCode = !inCode

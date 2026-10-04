@@ -27,5 +27,13 @@ First public release.
 - `jotter open` now finds notes inside folders, not only at the top level.
 - `o` no longer assumes nvim: it uses `$VISUAL`, `$EDITOR`, or the first of nvim, vim, nano or vi.
 
+### Security
+- Control characters in notes are no longer sent to the terminal. A crafted note could retitle the terminal
+  or silently replace the clipboard (OSC 52) just by being shown.
+- New notes are created `600` and a new notes folder `700`, instead of world-readable.
+- New notes are created exclusively, so a note saved in the same second by another program is never overwritten.
+- `golang.org/x/sys` updated to v0.44.0 (GO-2026-5024; not reachable from jotter's code). Go ≥ 1.25 is now needed to build.
+- CI: tests, govulncheck, staticcheck, gosec, shellcheck, gitleaks, namcap, and CodeQL once public.
+
 [Unreleased]: https://github.com/antoniowav/jotter/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/antoniowav/jotter/releases/tag/v0.1.0

@@ -8,6 +8,7 @@ Replace `X.Y.Z` with the new version.
 - [ ] `go mod tidy` leaves `go.mod`/`go.sum` unchanged; `go vet ./... && go test ./...` pass.
 
 ## 2. Test
+- [ ] CI is green on `main` (tests, security scan, Arch package).
 - [ ] `./install`, then `jotter --version` prints `jotter X.Y.Z`.
 - [ ] Browse, search, write, edit, delete a note; open one in `$EDITOR` with `o`.
 - [ ] Folders: picker at launch, `f`/`esc` back to it, `jotter open <file in a folder>`.
